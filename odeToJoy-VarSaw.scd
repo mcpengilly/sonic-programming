@@ -5,12 +5,12 @@ x = SynthDef(\iter, {
 
 	sum = 0;
 
-	env = EnvGen.kr(Env.perc(0.01, 0.5, 1, -4),
+	env = EnvGen.kr(Env.perc(0.01, 0.25, 1, -8),
 		doneAction: 2
 	);
 
 	10.do({
-		temp = VarSaw.ar(freq * {Rand(0.99, 1.00)}!2,
+		temp = VarSaw.ar(freq * {Rand(0.99, 1.01)}!2,
 			{Rand(0.0, 1.0)}!2,
 			{ExpRand(0.005, 0.5)}!2
 		);
