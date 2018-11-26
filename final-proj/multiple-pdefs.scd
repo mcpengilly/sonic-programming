@@ -21,7 +21,7 @@ SynthDef(\pluck, {
 
 (
 SynthDef(\iter, {
-	arg freq, atk, dec, rel;
+	arg freq, atk, dec, rel, amp = 0.005;
 	var temp, sum, env;
 
 	sum = 0;
@@ -41,14 +41,14 @@ SynthDef(\iter, {
 
 	sum = sum * env;
 
-	sum = sum * 0.005;
+	sum = sum * amp;
 
 	Out.ar(0, sum);
 }).add;
 )
 
 (
-b = SynthDef.new(\kick, {arg out = 0, amp = 1, sinfreq = 60, glissf = 0.4, atk = 0.01, rel = 0.5, pan = 0;
+SynthDef.new(\kick, {arg out = 0, amp = 1, sinfreq = 60, glissf = 0.4, atk = 0.01, rel = 0.5, pan = 0;
 	var env, snd, ramp;
 	env = Env.perc(atk, rel, amp).kr(doneAction: 2);
 	ramp = XLine.kr(
@@ -62,7 +62,6 @@ b = SynthDef.new(\kick, {arg out = 0, amp = 1, sinfreq = 60, glissf = 0.4, atk =
 }).add;
 )
 
-
 (
 Pdef(\iterPat,
 	Pbind(
@@ -72,7 +71,8 @@ Pdef(\iterPat,
 		\dur, Pseq([5], inf),
 		\atk, Pwhite(5, 10, inf),
 		\dec, Pwhite(0.3, 0.5, inf),
-		\rel, Pwhite(2, 8, inf)
+		\rel, Pwhite(2, 16, inf),
+		\amp, Pwhite(0.005, 0.01, inf)
 	);
 ).play;
 )
@@ -83,15 +83,18 @@ Pdef(\pluckPat,
 	Pbind(
 		\instrument, \pluck,
 		\scale, Scale.hungarianMinor,
-		// \degree, Pxrand([[0, 2, 5] [2, 5, 7], [4, 7, 9], [4, 9, 11], [5, 9, 11]], inf),
+		// \degree, Pxrand([[0, 2, 5], [2, 5, 7]], inf),
 		\degree, Pxrand([0, 1, 2, 3, 4, 5, 6, 7], inf),
-		\dur, Pseq([1, 1, 1, 1, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25], inf),
+		\dur, Pwrand([1, 0.5, 0.25], [0.1, 0.5, 0.4], inf),
+		// \dur, Pseq([1, 1, 1, 1, 0.5, 0.5, 1, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25], inf),
 		\maxDel, Pseq([1], inf),
 		\dec, Pwhite(3, 8, inf),
 		\amp, Pseq([0.05], inf)
 	);
 ).play;
 )
+
+
 
 (
 Pdef(\kickPat,
